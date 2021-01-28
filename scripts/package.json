@@ -1,0 +1,19 @@
+{
+    "name": "qvote-zilliqa-contract",
+    "version": "1.0.0",
+    "description": "Quadratic Voting smart contracts for Zilliqa",
+    "scripts": {},
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/QVote/QVoteZilliqaContract.git"
+    },
+    "author": "QVote",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/QVote/QVoteZilliqaContract/issues"
+    },
+    "homepage": "https://github.com/QVote/QVoteZilliqaContract#readme",
+    "dependencies": {
+        "@zilliqa-js/zilliqa": "^2.1.0"
+    }
+}
