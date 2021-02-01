@@ -66,17 +66,22 @@ let vote_failure_event =
     
 
 
-contract QVote (owner : ByStr20, token_to_credit_ratio : Int32)
+contract QVote 
+(
+    owner: ByStr20,
+    expiration_block: BNum, (* We are going to calculate the block at which the contract expires *)
+    name: String,
+    description: String,
+    options: List String,
+    token_to_credit_ratio: Int32,
+    registration_end_time: BNum
+)
 
-field options_to_votes : Map String Int32 = Emp String Int32    (* vote tally *) 
-field decision_end_time : BNum = BNum 0    
-field registration_end_time : BNum = BNum 0 (* users have to register to vote within a certain timeframe *) 
-field decision_built : Bool = False   (* decisions can't be changed once built *)
+(* TODO do constraint checks at contract creation *)
+
 field voter_balances : Map ByStr20 Int32 = Emp ByStr20 Int32
-field option_titles : List String = Nil {String}
 
-
-transition build_decision(option_titles_:List String, registration_end_time_:BNum, decision_end_time_:BNum)
+(* transition build_decision(option_titles_:List String, registration_end_time_:BNum, decision_end_time_:BNum)
   decision_built_ <- decision_built; 
 	match decision_built_ with 
 	| True => 
@@ -112,7 +117,7 @@ transition build_decision(option_titles_:List String, registration_end_time_:BNu
 			end 
 		end 
 	end 
-end 		
+end 		 *)
 
 
 transition register()
