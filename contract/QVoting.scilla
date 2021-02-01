@@ -1,0 +1,155 @@
+scilla_version 0 
+
+import BoolUtils IntUtils ListUtils
+
+
+library QVote 
+
+let zero = Uint32 0 
+
+let eq_string = 
+  fun(s1 : String) => 
+  fun(s2 : String) =>
+    builtin eq s1 s1
+
+let list_exist_string = @list_exists String 
+let list_length_string = @list_length String  
+
+let check_option_list_valid = 
+	fun (option_list : List String) => 
+		let l = list_length_string option_list in 
+			builtin eq l zero
+
+let check_times_valid = 
+  fun(registration: BNum) => 
+  fun(decision: BNum) => 
+    True   (* TODO implement me please *) 
+
+(* event codes *) 
+let not_owner_code = Uint32 0
+
+(* decision build codes *) 
+let decision_already_built_code = Uint32 1
+let decision_not_build_code = Uint32 2
+let option_titles_invalid_code = Uint32 3
+let times_invalid_code = Uint32 4
+let build_decision_success_code = Uint32 5 
+
+(* registration codes *) 
+let election_started_code = Uint32 6
+let zero_token_balance_code = Uint32 7
+let already_registered_code = Uint32 8
+let register_success_code = Uint32 9 
+
+(* vote codes *)
+let option_invalid_code = Uint32 10 
+let not_registered_code = Uint32 11 
+let insufficient_balance_code = Uint32 12 
+let decision_ended_code = Uint32 13
+let vote_success_code = Uint32 14
+
+(* events *)
+let build_decision_success_event = {_eventname: "build_decision_success"; code: build_decision_success_code}
+let build_decision_failure_event =
+  fun(event_code: Uint32) => 
+    {_eventname: "build_decision_failure"; code: event_code}
+    
+let register_success_event = {_eventname: "register_success"; code: register_success_code}
+let register_failure_event = 
+  fun(event_code: Uint32) => 
+    {_eventname: "register_failure"; code: event_code}
+
+let vote_success_event = {_eventname: "vote_success"; code: vote_success_code}
+let vote_failure_event = 
+  fun(event_code: Uint32) => 
+    {_eventname: "vote_failure"; code: event_code}
+    
+
+
+contract QVote 
+(
+    owner: ByStr20,
+    expiration_block: BNum, (* We are going to calculate the block at which the contract expires *)
+    name: String,
+    description: String,
+    options: List String,
+    token_to_credit_ratio: Int32,
+    registration_end_time: BNum
+)
+
+(* TODO do constraint checks at contract creation *)
+
+field voter_balances : Map ByStr20 Int32 = Emp ByStr20 Int32
+
+(* transition build_decision(option_titles_:List String, registration_end_time_:BNum, decision_end_time_:BNum)
+  decision_built_ <- decision_built; 
+	match decision_built_ with 
+	| True => 
+		e = build_decision_failure_event decision_already_built_code;
+		event e
+	| False => 
+		is_owner = builtin eq owner _sender; 
+		match is_owner with 
+		| False => 
+			e = build_decision_failure_event not_owner_code;
+			event e 
+		| True => 	
+			is_valid = check_option_list_valid option_titles_; 
+			match is_valid with 
+			| False => 
+				e = build_decision_failure_event option_titles_invalid_code; 
+				event e
+			| True => 
+				option_titles := option_titles_; 
+				valid_times = check_times_valid registration_end_time_ decision_end_time_;
+				match valid_times with 
+				| False => 
+					e = build_decision_failure_event times_invalid_code;
+					event e
+				| True => 
+					registration_end_time := registration_end_time_;
+					decision_end_time := decision_end_time_;
+					decision_built_ = True; 
+					decision_built := decision_built_; 
+					e = build_decision_success_event; 
+					event e
+				end 
+			end 
+		end 
+	end 
+end 		 *)
+
+
+transition register()
+	(* TODO implement all the various checks *)
+	voter_balances[_sender] := token_to_credit_ratio;  (* TODO get token balance and multiply *) 
+	e = register_success_event;
+	event e
+end 
+
+
+
+transition vote(option : String, credits : Int32)	
+	(* TODO check if voter is allowed *) 	
+	option_titles_ <- option_titles;
+	eq_option = eq_string option;
+	is_valid = list_exist_string eq_option option_titles_; 
+	match is_valid with 
+	| False => 
+		e = vote_failure_event option_invalid_code;
+		event e
+	| True => 
+		options_to_votes[option] := credits;
+		e = vote_success_event; 
+		event e
+	end 
+end 
+	
+
+
+(* 
+TODO 
+ - vote with a list of options and a list of credits. or simply a list of credits if the order is maintained 
+- quadratic voting 
+*) 
+
