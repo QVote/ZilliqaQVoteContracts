@@ -1,16 +1,41 @@
 scilla_version 0 
 
-import BoolUtils IntUtils ListUtils
+import BoolUtils IntUtils ListUtils PairUtils
 
 
 library QVote 
 
 let zero = Uint32 0 
 
+let i128_len = 
+  fun (l : List Int128) => 
+    let len = @list_length Int128 in
+    len l
+let s_len = 
+  fun (l : List String) => 
+    let len = @list_length String in
+    len l
+
 let eq_string = 
   fun(s1 : String) => 
   fun(s2 : String) =>
     builtin eq s1 s1
+
+let eq_lr_pair =
+  fun(p : Pair String String) =>
+    let f = @fst String String in
+    let s = @snd String String in
+    let l = f p in
+    let r = s p in
+    eq_string l r
+    
+let eq_string_lists = 
+  fun(ls1 : List String) => 
+  fun(ls2 : List String) =>
+    let zip = @list_zip String String in
+    let zipped = zip ls1 ls2 in
+    let all = @list_forall (Pair String String) in
+    all eq_lr_pair zipped
 
 let list_exist_string = @list_exists String 
 let list_length_string = @list_length String  
@@ -128,21 +153,29 @@ transition register()
 end 
 
 
-
-transition vote(option : String, credits : Int32)	
+(* 
+    @notice: vote on the decision
+    @param: options: List of option names
+    @param: credtis: Credits corresponding by index to option names
+*)
+transition vote(options_sender: List String, credits_sender: List Int128)	
 	(* TODO check if voter is allowed *) 	
-	option_titles_ <- option_titles;
-	eq_option = eq_string option;
-	is_valid = list_exist_string eq_option option_titles_; 
-	match is_valid with 
-	| False => 
-		e = vote_failure_event option_invalid_code;
+	(* check if options_sender == options *)
+	opt_eq = eq_string_lists options_sender options;
+	(* TODO check if options.length == credits_sender.length *)
+	cs_len = i128_len credits_sender;
+	opt_len = s_len options;
+	eq_len = uint32_eq opt_len cs_len;
+	is_valid = andb eq_len opt_eq;
+	match opt_eq with
+	 | False =>
+	  e = vote_failure_event option_invalid_code;
 		event e
-	| True => 
-		options_to_votes[option] := credits;
-		e = vote_success_event; 
+	 | True => 
+	 (* do votin stuff *)
+	  e = vote_success_event; 
 		event e
-	end 
+	 end
 end 
 	
 
