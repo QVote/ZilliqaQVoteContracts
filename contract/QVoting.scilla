@@ -71,6 +71,15 @@ let int128_credit_to_vote: Int128 -> Int128 =
     | False  =>
       pos_int128_sqrt mult_by_10k
     end
+    
+    
+let int32_to_int128: Int32 -> Int128 =
+  fun(i : Int32) =>
+    let res = builtin to_int128 i in
+    match res with
+      | Some c => c
+      | None => Int128 0
+    end
 
 let int128_map_credits_to_votes: List Int128 -> List Int128 =
   fun(l : List Int128) =>
@@ -280,21 +289,36 @@ transition vote(options_sender: List String, credits_sender: List Int128)
 	abs_val_sender_credits = in128_list_abs credits_sender;
 	(* get sum of abs val *)
 	abs_val_sum_int128 = int128_list_int128_sum abs_val_sender_credits;
-	(* TODO check if sum credits_sender <=  token_to_credit_ratio*token_balance *)
-	is_valid = andb eq_len opt_eq;
-	match is_valid with
-	 | False =>
-	  e = vote_failure_event option_invalid_code;
-		event e
-	 | True => 
-	 (* do votin stuff *)
-	  copy <- options_to_votes_map;
-	  votes_sender = int128_map_credits_to_votes credits_sender;
-	  new_opt_votes_map = vote_from_list_of_options_credits_to_map options_sender votes_sender copy;
-	  options_to_votes_map := new_opt_votes_map;
-	  e = vote_success_event; 
-		event e
-	 end
+	(* get voter balance *)
+	voter_balance <- voter_balances[_sender];
+	match voter_balance with
+	 | Some voter_b =>
+	   (* voter balance to int128 *)
+    	voter_balance_int128 = int32_to_int128 voter_b;
+    	(* check if credits_sum <= balance *)
+      bal_valid = int128_le abs_val_sum_int128 voter_balance_int128;
+    	temp = andb bal_valid eq_len;
+    	is_valid = andb temp opt_eq;
+    	match is_valid with
+    	 | False =>
+    	  e = vote_failure_event option_invalid_code;
+    		event e
+    	 | True => 
+    	 (* do votin stuff *)
+    	  copy <- options_to_votes_map;
+    	  votes_sender = int128_map_credits_to_votes credits_sender;
+    	  new_opt_votes_map = vote_from_list_of_options_credits_to_map options_sender votes_sender copy;
+    	  options_to_votes_map := new_opt_votes_map;
+    	  (* can vote only once *)
+    	  zero = Int32 0;
+    	  voter_balances[_sender] := zero;
+    	  e = vote_success_event; 
+    		event e
+    	 end
+	 | None =>
+     e = vote_failure_event not_registered_code;
+	   event e
+	end
 end 
 	
 
