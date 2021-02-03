@@ -7,21 +7,109 @@ library QVote
 
 let zero = Uint32 0 
 
-let i128_len = 
+
+let vote_from_list_of_options_credits_to_map: List String -> List Int128 -> Map String Int128 -> Map String Int128 =
+  fun(ls: List String) =>
+    fun(lc: List Int128) => 
+      fun(msi: Map String Int128) => 
+        let zip = @list_zip String Int128 in
+        let zipped = zip ls lc in
+        let foldleft = @list_foldl (Pair String Int128) (Map String Int128) in
+        let f = @fst String Int128 in
+        let s = @snd String Int128 in
+        let addVote =
+         fun (acc : Map String Int128) =>
+         fun (option_credit_pair : Pair String Int128) =>
+          let opt = f option_credit_pair in
+          let cred = s option_credit_pair in
+          let cur_val = builtin get acc opt in
+          match cur_val with
+          | Some cur =>
+            let new_val = builtin add cur cred in
+            builtin put acc opt new_val
+          | None =>
+            builtin put acc opt cred
+          end
+         in
+        foldleft addVote msi zipped
+        
+let pos_int128_sqrt: Int128 -> Int128 =
+  fun(i: Int128) =>
+    let uint = builtin to_uint128 i in
+    match uint with
+      | Some c =>
+        let sqrt = builtin isqrt c in
+        let int = builtin to_int128 sqrt in
+        match int with 
+        | Some cast_int =>
+          cast_int
+        | None =>
+          Int128 0
+        end
+      | None =>
+        Int128 0
+    end
+
+(* 
+  @notice: THE RESULT NEEDS TO BE DIV BY 100 
+  This is actually not exactly a sqrt function
+  given an integer i
+  it returns sign(i)*sqrt(abs(i))*100
+*)
+let int128_credit_to_vote: Int128 -> Int128 =
+   fun(i : Int128) =>
+    let zero = Int128 0 in
+    let is_negative = int128_lt i zero in
+    let ten_k = Int128 10000 in
+    let mult_by_10k = builtin mul ten_k i in
+    match is_negative with 
+    | True => 
+      let minus_one = Int128 -1 in
+      let positive = builtin mul minus_one mult_by_10k in
+      let res = pos_int128_sqrt positive in
+      builtin mul minus_one res
+    | False  =>
+      pos_int128_sqrt mult_by_10k
+    end
+
+let int128_map_credits_to_votes: List Int128 -> List Int128 =
+  fun(l : List Int128) =>
+    let map = @list_map Int128 Int128 in
+    map int128_credit_to_vote l
+
+
+let int128_abs: Int128 -> Int128 = 
+  fun(i : Int128) =>
+    let zero = Int128 0 in
+    let is_negative = int128_lt i zero in
+    match is_negative with 
+    | True => 
+      let minus_one = Int128 -1 in
+      builtin mul minus_one i
+    | False  => i
+    end
+
+let in128_list_abs: List Int128 -> List Int128 = 
+  fun(l : List Int128) => 
+    let map = @list_map Int128 Int128 in
+    map int128_abs l
+    
+
+let i128_len: List Int128 -> Uint32 = 
   fun (l : List Int128) => 
     let len = @list_length Int128 in
     len l
-let s_len = 
+let s_len: List String -> Uint32 = 
   fun (l : List String) => 
     let len = @list_length String in
     len l
 
-let eq_string = 
+let eq_string: String -> String -> Bool = 
   fun(s1 : String) => 
   fun(s2 : String) =>
     builtin eq s1 s1
 
-let eq_lr_pair =
+let eq_lr_pair: Pair String String -> Bool =
   fun(p : Pair String String) =>
     let f = @fst String String in
     let s = @snd String String in
@@ -29,13 +117,24 @@ let eq_lr_pair =
     let r = s p in
     eq_string l r
     
-let eq_string_lists = 
+let eq_string_lists: List String -> List String -> Bool = 
   fun(ls1 : List String) => 
   fun(ls2 : List String) =>
     let zip = @list_zip String String in
     let zipped = zip ls1 ls2 in
     let all = @list_forall (Pair String String) in
     all eq_lr_pair zipped
+    
+let int128_list_int128_sum : List Int128 -> Int128 =
+   fun (l : List Int128) =>
+   let foldleft = @list_foldl Int128 Int128 in
+   let initState = Int128 0 in
+   let addVal =
+     fun (acc : Int128) =>
+     fun (credits : Int128) =>
+       builtin add acc credits
+   in
+     foldleft addVal initState l
 
 let list_exist_string = @list_exists String 
 let list_length_string = @list_length String  
@@ -105,6 +204,8 @@ contract QVote
 (* TODO do constraint checks at contract creation *)
 
 field voter_balances : Map ByStr20 Int32 = Emp ByStr20 Int32
+(* VOTES have to be div by 100 to get the actual votes since sqrt is an integer sqrt *)
+field options_to_votes_map : Map String Int128 = Emp String Int128
 
 (* transition build_decision(option_titles_:List String, registration_end_time_:BNum, decision_end_time_:BNum)
   decision_built_ <- decision_built; 
@@ -158,21 +259,39 @@ end
     @param: options: List of option names
     @param: credtis: Credits corresponding by index to option names
 *)
+(* TODO do some maths that calculates the max number of credits that can be submitted
+   aka at what point List Int128 > Int256
+*)
 transition vote(options_sender: List String, credits_sender: List Int128)	
-	(* TODO check if voter is allowed *) 	
+  (*
+    TODO check if voter is registered
+    if voter balance >= registered balance or something similar
+    then allow
+    else reject
+    TODO check if voting time did not expire
+  *)
 	(* check if options_sender == options *)
 	opt_eq = eq_string_lists options_sender options;
-	(* TODO check if options.length == credits_sender.length *)
+	(* check if options.length == credits_sender.length *)
 	cs_len = i128_len credits_sender;
 	opt_len = s_len options;
 	eq_len = uint32_eq opt_len cs_len;
+	(* for all credits_sender take absolute val *)
+	abs_val_sender_credits = in128_list_abs credits_sender;
+	(* get sum of abs val *)
+	abs_val_sum_int128 = int128_list_int128_sum abs_val_sender_credits;
+	(* TODO check if sum credits_sender <=  token_to_credit_ratio*token_balance *)
 	is_valid = andb eq_len opt_eq;
-	match opt_eq with
+	match is_valid with
 	 | False =>
 	  e = vote_failure_event option_invalid_code;
 		event e
 	 | True => 
 	 (* do votin stuff *)
+	  copy <- options_to_votes_map;
+	  votes_sender = int128_map_credits_to_votes credits_sender;
+	  new_opt_votes_map = vote_from_list_of_options_credits_to_map options_sender votes_sender copy;
+	  options_to_votes_map := new_opt_votes_map;
 	  e = vote_success_event; 
 		event e
 	 end
