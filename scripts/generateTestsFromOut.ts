@@ -1,7 +1,3 @@
-import { checkerOutputJson, CONTRACT_CODE, scillaServerUrl } from './config';
-import { readFileSync, writeFileSync } from 'fs';
-import fetch from 'node-fetch';
-import { CheckerOutput } from './types';
 import * as out from './out/out.json';
 import {
     initJson, blockchainJson, outputJson,

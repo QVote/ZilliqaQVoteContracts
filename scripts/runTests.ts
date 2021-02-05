@@ -1,4 +1,4 @@
-import { checkerOutputJson, CONTRACT_CODE, scillaServerUrl } from './config';
+import { CONTRACT_CODE, scillaServerUrl } from './config';
 import { readFileSync } from 'fs';
 import fetch from 'node-fetch';
 import { writeFile, getFileName } from './utill';
