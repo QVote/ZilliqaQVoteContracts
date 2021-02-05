@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { CONTRACT_CODE, scillaServerUrl, contractRelativeDir } from './config';
+import { CONTRACT_CODE, scillaServerUrl, checkerOutputJson } from './config';
 import { writeFileSync } from 'fs';
 
 (async () => {
@@ -15,7 +15,7 @@ import { writeFileSync } from 'fs';
         console.log(json.result);
         const message = await JSON.parse(json.message);
         console.log(message)
-        writeFileSync('./out/out.json', json.message);
+        writeFileSync(checkerOutputJson, json.message);
     } catch (e) {
         console.error(e);
     }

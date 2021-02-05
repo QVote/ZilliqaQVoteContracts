@@ -2,7 +2,12 @@
     "name": "qvote-zilliqa-contract",
     "version": "1.0.0",
     "description": "Quadratic Voting smart contracts for Zilliqa",
-    "scripts": {},
+    "scripts": {
+        "checkContract": "npx ts-node check.ts",
+        "makeTests": "npx ts-node generateTestsFromOut.ts",
+        "test": "npx ts-node runTests.ts",
+        "makeAndTest": "npm run makeTests && npm run test"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/QVote/QVoteZilliqaContract.git"
