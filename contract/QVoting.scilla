@@ -242,45 +242,6 @@ this contains the list of users that have registered. right before the election 
 assign credits to this *)
 field registered_voters : List ByStr20 = Nil {ByStr20}
 
-
-(* transition build_decision(option_titles_:List String, registration_end_time_:BNum, decision_end_time_:BNum)
-  decision_built_ <- decision_built; 
-	match decision_built_ with 
-	| True => 
-		e = build_decision_failure_event decision_already_built_code;
-		event e
-	| False => 
-		is_owner = builtin eq owner _sender; 
-		match is_owner with 
-		| False => 
-			e = build_decision_failure_event not_owner_code;
-			event e 
-		| True => 	
-			is_valid = check_option_list_valid option_titles_; 
-			match is_valid with 
-			| False => 
-				e = build_decision_failure_event option_titles_invalid_code; 
-				event e
-			| True => 
-				option_titles := option_titles_; 
-				valid_times = check_times_valid registration_end_time_ decision_end_time_;
-				match valid_times with 
-				| False => 
-					e = build_decision_failure_event times_invalid_code;
-					event e
-				| True => 
-					registration_end_time := registration_end_time_;
-					decision_end_time := decision_end_time_;
-					decision_built_ = True; 
-					decision_built := decision_built_; 
-					e = build_decision_success_event; 
-					event e
-				end 
-			end 
-		end 
-	end 
-end 		 *)
-
 (* CENTRALIZED
 this transition is only used at the moment, until we either find a decentralized oracle,
 or we can access another contract's state directly *)
