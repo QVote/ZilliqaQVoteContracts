@@ -5,7 +5,7 @@
     "scripts": {
         "checkContract": "npx ts-node check.ts",
         "makeTests": "npx ts-node generateTestsFromOut.ts",
-        "test": "npx ts-node runTests.ts",
+        "test": "npx ts-node test.ts",
         "makeAndTest": "npm run makeTests && npm run test"
     },
     "repository": {
