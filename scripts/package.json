@@ -3,10 +3,7 @@
     "version": "1.0.0",
     "description": "Quadratic Voting smart contracts for Zilliqa",
     "scripts": {
-        "checkContract": "npx ts-node check.ts",
-        "makeTests": "npx ts-node generateTestsFromOut.ts",
-        "test": "npx ts-node test.ts",
-        "makeAndTest": "npm run makeTests && npm run test"
+        "test": "npx ts-node test.ts"
     },
     "repository": {
         "type": "git",
@@ -19,7 +16,6 @@
     },
     "homepage": "https://github.com/QVote/QVoteZilliqaContract#readme",
     "dependencies": {
-        "@zilliqa-js/zilliqa": "^2.1.0",
         "node-fetch": "^2.1.2"
     },
     "devDependencies": {
