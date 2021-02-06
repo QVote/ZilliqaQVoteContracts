@@ -51,15 +51,6 @@ function setValForParams(arr: Params,
     })
 }
 
-function createValueParam(type: string, vname: string, value: ValueField): ValueParam {
-    const param = {
-        type,
-        vname,
-        value
-    }
-    return param;
-}
-
 function resolvePath(dir: string, fileName: string, extension: string) {
     return `${dir}/${fileName}.${extension}`
 }
@@ -68,8 +59,4 @@ function writeFile(dir: string, fileName: string, extension: string, fileJson: {
     writeFileSync(resolvePath(dir, fileName, extension), JSON.stringify(fileJson, null, "\t"));
 }
 
-function getFileName(pre: string, num: string) {
-    return `${pre}_${num}`;
-}
-
-export { setValForParams, createValueParam, writeFile, resolvePath, getFileName };
+export { setValForParams, writeFile };

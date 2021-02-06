@@ -1,19 +1,25 @@
 import ss from './ScillaServer';
-import { CONTRACT_CODE, _dirs, _names } from './config';
-import { createValueParam } from './utill';
-import tg from './TestGenerator';
+import { CONTRACT_CODE, _dirs, _names, scillaServerUrl } from './config';
+import TestGenerator from './TestGenerator';
 
 const ownerAddress = "0x1234567890123456789012345678901234567890";
 
+const tg = new TestGenerator({
+    testResultAbsolutePath: _dirs.testDir
+})
+
 function handleResult(testName: string, result: any, testBody: any) {
-    testBody.code = "DontWantItInTheFileThx";
+    testBody.code = "Removed Code";
     tg.write(testName, { ...testBody, result: result });
     console.info(`Test: ${testName}: result: ${result.result}`)
 }
 
 (async () => {
     try {
-        const res = await ss.check({ contractCode: CONTRACT_CODE });
+        const res = await ss.check({
+            contractCode: CONTRACT_CODE,
+            ssUrlEndpoint: `${scillaServerUrl}/contract/check`
+        });
         if (typeof res.message != 'string') {
             const out = res.message;
             const emptyArr: any[] = [];
@@ -27,11 +33,11 @@ function handleResult(testName: string, result: any, testBody: any) {
                 tg.genOutput(),
                 tg.genMessage("register", [], ownerAddress, "0"),
                 tg.genState([
-                    createValueParam("Map (ByStr20) (Int32)", "voter_balances", emptyArr),
-                    createValueParam("Map (String) (Int128)", "options_to_votes_map", emptyArr)
+                    tg.createValueParam("Map (ByStr20) (Int32)", "voter_balances", emptyArr),
+                    tg.createValueParam("Map (String) (Int128)", "options_to_votes_map", emptyArr)
                 ], "0"),
             );
-            const result = await ss.runTest({ testBody });
+            const result = await ss.runTest({ testBody, ssUrlEndpoint: `${scillaServerUrl}/contract/call` });
             handleResult("registerVoter", result, testBody);
             /**
              * End test

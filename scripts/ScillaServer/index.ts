@@ -1,16 +1,15 @@
 import fetch from 'node-fetch';
-import { scillaServerUrl } from '../config';
 
 
 class ScillaServer {
     /**
-        @param ssUrl scilla server url defaults to config
+        @param ssUrlEndpoint scilla server endpoint url ex https://localhost:4000/contract/check
         @param contractCode code of the .scilla contract
     */
-    async check({ sSUrl = scillaServerUrl, contractCode }:
-        { sSUrl?: string, contractCode: string }) {
+    async check({ ssUrlEndpoint, contractCode }:
+        { ssUrlEndpoint: string, contractCode: string }) {
         try {
-            const res = await fetch(sSUrl + "/contract/check", {
+            const res = await fetch(ssUrlEndpoint, {
                 method: "POST", body: JSON.stringify(
                     {
                         "code": contractCode,
@@ -25,14 +24,14 @@ class ScillaServer {
 
     /**
      * 
-     * @param sSUrl scilla server url defaults to config
+     * @param ssUrlEndpoint scilla server endpoint url ex https://localhost:4000/contract/call
      * @param testBody body of the test to send
      * @param gaslimit defaults to 100000
      */
-    async runTest({ sSUrl = scillaServerUrl, testBody, gaslimit = "100000" }:
-        { sSUrl?: string, testBody: { [key: string]: string }, gaslimit?: string }) {
+    async runTest({ ssUrlEndpoint, testBody, gaslimit = "100000" }:
+        { ssUrlEndpoint: string, testBody: { [key: string]: string }, gaslimit?: string }) {
         try {
-            const res = await fetch(sSUrl + "/contract/call", {
+            const res = await fetch(ssUrlEndpoint, {
                 method: "POST", body: JSON.stringify(
                     {
                         ...testBody,

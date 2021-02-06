@@ -1,12 +1,24 @@
-import { writeFile, Params, setValForParams, ValueParams } from '../utill';
-import { _dirs, _names } from '../config';
+import { writeFile, Params, setValForParams, ValueParams, ValueField, ValueParam } from '../utill';
 type obj = { [key: string]: any };
 
 export type TestBody = {
     code: string, init: obj, blockchain: obj, output: obj, message: obj, state: obj
 }
 
+export type _Dirs = {
+    testResultAbsolutePath: string,
+}
+
 class TestGenerator {
+    private _dirs: _Dirs;
+
+    /**
+     * 
+     * @param _dirs a dict with the directories to write the output to
+     */
+    constructor(_dirs: _Dirs) {
+        this._dirs = _dirs;
+    }
 
     /**
      * Writes a testfile to reuse later
@@ -14,7 +26,7 @@ class TestGenerator {
      * @param fileJson 
      */
     write(testName: string, fileJson: { [key: string]: any }) {
-        writeFile(_dirs.testDir, testName, "json", fileJson);
+        writeFile(this._dirs.testResultAbsolutePath, testName, "json", fileJson);
     }
 
     /**
@@ -118,6 +130,21 @@ class TestGenerator {
             "state": JSON.stringify(state),
         }
     }
+
+    /**
+     * Used to generate value objects for scilla variables
+     * @param type Valid scilla type
+     * @param vname name of the variable
+     * @param value value of the variable
+     */
+    createValueParam(type: string, vname: string, value: ValueField): ValueParam {
+        const param = {
+            type,
+            vname,
+            value
+        }
+        return param;
+    }
 }
 
-export default new TestGenerator();
+export default TestGenerator;
