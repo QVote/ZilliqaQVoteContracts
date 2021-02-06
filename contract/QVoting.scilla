@@ -50,6 +50,7 @@ let pos_int128_sqrt: Int128 -> Int128 =
         Int128 0
     end
 
+
 (* 
   @notice: THE RESULT NEEDS TO BE DIV BY 100 
   This is actually not exactly a sqrt function
@@ -81,10 +82,12 @@ let int32_to_int128: Int32 -> Int128 =
       | None => Int128 0
     end
 
+
 let int128_map_credits_to_votes: List Int128 -> List Int128 =
   fun(l : List Int128) =>
     let map = @list_map Int128 Int128 in
     map int128_credit_to_vote l
+
 
 
 let int128_abs: Int128 -> Int128 = 
@@ -98,6 +101,7 @@ let int128_abs: Int128 -> Int128 =
     | False  => i
     end
 
+
 let in128_list_abs: List Int128 -> List Int128 = 
   fun(l : List Int128) => 
     let map = @list_map Int128 Int128 in
@@ -108,10 +112,12 @@ let i128_len: List Int128 -> Uint32 =
   fun (l : List Int128) => 
     let len = @list_length Int128 in
     len l
+
 let s_len: List String -> Uint32 = 
   fun (l : List String) => 
     let len = @list_length String in
     len l
+
 
 let eq_string: String -> String -> Bool = 
   fun(s1 : String) => 
@@ -148,15 +154,24 @@ let int128_list_int128_sum : List Int128 -> Int128 =
 let list_exist_string = @list_exists String 
 let list_length_string = @list_length String  
 
+let append_voter = 
+	fun(voter_list : List ByStr20) => 
+	fun(new_voter : ByStr20) => 
+		Cons {ByStr20} new_voter voter_list
+
 let check_option_list_valid = 
 	fun (option_list : List String) => 
 		let l = list_length_string option_list in 
 			builtin eq l zero
 
-let check_times_valid = 
+let check_valid_times = 
+  fun(current: BNum) => 
   fun(registration: BNum) => 
-  fun(decision: BNum) => 
-    True   (* TODO implement me please *) 
+  fun(decision: BNum) =>
+    let registration_over = builtin blt registration current in 
+    let decision_not_over = builtin blt current decision in 
+      andb registration_over decision_not_over
+
 
 (* event codes *) 
 let not_owner_code = Uint32 0
@@ -174,11 +189,14 @@ let zero_token_balance_code = Uint32 7
 let already_registered_code = Uint32 8
 let register_success_code = Uint32 9 
 
+let owner_register_success_code = Uint32 15
+let ownwer_register_failure_code = Uint32 16 
+
 (* vote codes *)
 let option_invalid_code = Uint32 10 
 let not_registered_code = Uint32 11 
 let insufficient_balance_code = Uint32 12 
-let decision_ended_code = Uint32 13
+let not_in_time = Uint32 13
 let vote_success_code = Uint32 14
 
 (* events *)
@@ -197,7 +215,10 @@ let vote_failure_event =
   fun(event_code: Uint32) => 
     {_eventname: "vote_failure"; code: event_code}
     
-
+let owner_register_event_success = {_eventname: "owner_register_success"; code: owner_register_success_code}
+let owner_register_event_failure = 
+  fun(event_code: Uint32) => 
+    {_eventname: "owner_register_failure"; code: event_code}
 
 contract QVote 
 (
@@ -215,6 +236,12 @@ contract QVote
 field voter_balances : Map ByStr20 Int32 = Emp ByStr20 Int32
 (* VOTES have to be div by 100 to get the actual votes since sqrt is an integer sqrt *)
 field options_to_votes_map : Map String Int128 = Emp String Int128
+
+(* CENTRALIZED 
+this contains the list of users that have registered. right before the election time the oracle will
+assign credits to this *)
+field registered_voters : List ByStr20 = Nil {ByStr20}
+
 
 (* transition build_decision(option_titles_:List String, registration_end_time_:BNum, decision_end_time_:BNum)
   decision_built_ <- decision_built; 
@@ -254,10 +281,28 @@ field options_to_votes_map : Map String Int128 = Emp String Int128
 	end 
 end 		 *)
 
+(* CENTRALIZED
+this transition is only used at the moment, until we either find a decentralized oracle,
+or we can access another contract's state directly *)
+
+transition owner_register(address : ByStr20, credits : Int32)
+	is_owner = builtin eq _sender owner;
+	match is_owner with
+	| False => 
+		e = owner_register_event_failure not_owner_code; 
+		event e
+	| True => 
+		voter_balances[address] := credits; 
+		e = owner_register_event_success; 
+		event e
+	end
+end 
 
 transition register()
 	(* TODO implement all the various checks *)
-	voter_balances[_sender] := token_to_credit_ratio;  (* TODO get token balance and multiply *) 
+	registered_voters_old <- registered_voters; 
+	new_voter_list = append_voter registered_voters_old _sender; 
+	registered_voters := new_voter_list; 
 	e = register_success_event;
 	event e
 end 
@@ -272,60 +317,55 @@ end
    aka at what point List Int128 > Int256
 *)
 transition vote(options_sender: List String, credits_sender: List Int128)	
-  (*
-    TODO check if voter is registered
-    if voter balance >= registered balance or something similar
-    then allow
-    else reject
-    TODO check if voting time did not expire
-  *)
-	(* check if options_sender == options *)
-	opt_eq = eq_string_lists options_sender options;
-	(* check if options.length == credits_sender.length *)
-	cs_len = i128_len credits_sender;
-	opt_len = s_len options;
-	eq_len = uint32_eq opt_len cs_len;
-	(* for all credits_sender take absolute val *)
-	abs_val_sender_credits = in128_list_abs credits_sender;
-	(* get sum of abs val *)
-	abs_val_sum_int128 = int128_list_int128_sum abs_val_sender_credits;
-	(* get voter balance *)
-	voter_balance <- voter_balances[_sender];
-	match voter_balance with
-	 | Some voter_b =>
-	   (* voter balance to int128 *)
-    	voter_balance_int128 = int32_to_int128 voter_b;
-    	(* check if credits_sum <= balance *)
-      bal_valid = int128_le abs_val_sum_int128 voter_balance_int128;
-    	temp = andb bal_valid eq_len;
-    	is_valid = andb temp opt_eq;
-    	match is_valid with
-    	 | False =>
-    	  e = vote_failure_event option_invalid_code;
-    		event e
-    	 | True => 
-    	 (* do votin stuff *)
-    	  copy <- options_to_votes_map;
-    	  votes_sender = int128_map_credits_to_votes credits_sender;
-    	  new_opt_votes_map = vote_from_list_of_options_credits_to_map options_sender votes_sender copy;
-    	  options_to_votes_map := new_opt_votes_map;
-    	  (* can vote only once *)
-    	  zero = Int32 0;
-    	  voter_balances[_sender] := zero;
-    	  e = vote_success_event; 
-    		event e
-    	 end
-	 | None =>
-     e = vote_failure_event not_registered_code;
-	   event e
-	end
+  blk <- & BLOCKNUMBER;
+  in_time = check_valid_times blk registration_end_time expiration_block; 
+  match in_time with 
+  | False => 
+    e = vote_failure_event not_in_time; 
+    event e
+  | True => 
+  	(* check if options_sender == options *)
+  	opt_eq = eq_string_lists options_sender options;
+  	(* check if options.length == credits_sender.length *)
+  	cs_len = i128_len credits_sender;
+  	opt_len = s_len options;
+  	eq_len = uint32_eq opt_len cs_len;
+  	(* for all credits_sender take absolute val *)
+  	abs_val_sender_credits = in128_list_abs credits_sender;
+  	(* get sum of abs val *)
+  	abs_val_sum_int128 = int128_list_int128_sum abs_val_sender_credits;
+  	(* get voter balance *)
+  	voter_balance <- voter_balances[_sender];
+  	match voter_balance with
+  	 | Some voter_b =>
+  	   (* voter balance to int128 *)
+      	voter_balance_int128 = int32_to_int128 voter_b;
+      	(* check if credits_sum <= balance *)
+        bal_valid = int128_le abs_val_sum_int128 voter_balance_int128;
+      	temp = andb bal_valid eq_len;
+      	is_valid = andb temp opt_eq;
+      	match is_valid with
+      	 | False =>
+      	  e = vote_failure_event option_invalid_code;
+      		event e
+      	 | True => 
+      	 (* do votin stuff *)
+      	  copy <- options_to_votes_map;
+      	  votes_sender = int128_map_credits_to_votes credits_sender;
+      	  new_opt_votes_map = vote_from_list_of_options_credits_to_map options_sender votes_sender copy;
+      	  options_to_votes_map := new_opt_votes_map;
+      	  (* can vote only once *)
+      	  zero = Int32 0;
+      	  voter_balances[_sender] := zero;
+      	  e = vote_success_event; 
+      		event e
+      	 end
+  	 | None =>
+       e = vote_failure_event not_registered_code;
+  	   event e
+  	end
+  end
 end 
 	
 
-
-(* 
-TODO 
- - vote with a list of options and a list of credits. or simply a list of credits if the order is maintained 
-- quadratic voting 
-*) 
 
