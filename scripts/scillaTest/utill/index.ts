@@ -1,14 +1,7 @@
 import { writeFileSync } from 'fs';
+import { Params } from '../types';
 
-export type Param = {
-    vname: string;
-    type: string;
-};
-export type ValueField = { [key: string]: any } | any[] | string;
-export type Value = { value: ValueField };
-export type ValueParam = Param & Value;
-export type ValueParams = ValueParam[];
-export type Params = Param[];
+
 
 function setValForParams(arr: Params,
     { stringVal = "",

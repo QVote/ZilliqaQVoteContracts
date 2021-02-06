@@ -1,12 +1,12 @@
-import ss from './ScillaServer';
 import { CONTRACT_CODE, _dirs, _names, scillaServerUrl } from './config';
-import TestGenerator from './TestGenerator';
+import { TestGenerator, ScillaServer } from './scillaTest';
 
 const ownerAddress = "0x1234567890123456789012345678901234567890";
 
 const tg = new TestGenerator({
     testResultAbsolutePath: _dirs.testDir
 })
+const ss = new ScillaServer();
 
 function handleResult(testName: string, result: any, testBody: any) {
     testBody.code = "Removed Code";

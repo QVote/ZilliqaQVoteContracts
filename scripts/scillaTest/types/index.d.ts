@@ -1,4 +1,6 @@
-//this is relevant to QVoting contract not ANY contract ex: procedures field
+/**
+* this is relevant to QVoting contract not ANY contract ex: procedures field
+*/
 export type CheckerOutput = {
     "cashflow_tags": {
         "State variables": { "field": string, "tag": string }[],
@@ -24,4 +26,14 @@ export type CheckerOutput = {
     "warnings": any, //dont care again
     "gas_remaining": string
 }
+
+export type Param = {
+    vname: string;
+    type: string;
+};
+export type ValueField = { [key: string]: any } | any[] | string;
+export type Value = { value: ValueField };
+export type ValueParam = Param & Value;
+export type ValueParams = ValueParam[];
+export type Params = Param[];
 

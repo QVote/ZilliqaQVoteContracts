@@ -56,4 +56,4 @@ class ScillaServer {
     }
 }
 
-export default new ScillaServer();
+export default ScillaServer;

@@ -1,4 +1,6 @@
-import { writeFile, Params, setValForParams, ValueParams, ValueField, ValueParam } from '../utill';
+import { writeFile, setValForParams } from '../utill';
+import { ValueParams, ValueField, ValueParam, Params } from '../types';
+
 type obj = { [key: string]: any };
 
 export type TestBody = {
