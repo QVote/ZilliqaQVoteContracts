@@ -41,7 +41,7 @@ class TestGenerator {
      * @param bNumVal 
      * @param byStr20Val 
      */
-    genInit(params: Params, stringVal: string, listStringVal: string[], int32Val: string, bNumVal: string, byStr20Val: string) {
+    genInit(params: Params, conf: { [key: string]: ValueField }) {
         return [
             {
                 "vname": "_scilla_version",
@@ -58,7 +58,7 @@ class TestGenerator {
                 "type": "BNum",
                 "value": "1"
             },
-            ...setValForParams(params, { stringVal, listStringVal, int32Val, bNumVal, byStr20Val })]
+            ...setValForParams(params, conf)]
     }
 
     /**

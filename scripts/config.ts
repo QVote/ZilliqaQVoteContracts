@@ -1,7 +1,10 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
-const CONTRACT_CODE = readFileSync('../contract/QVoting.scilla', 'utf-8');
+const getContractCode = (path: string) => {
+    const code = readFileSync(path, 'utf-8').toString();
+    return code;
+}
 const scillaServerUrl = "http://localhost:4000";
 
 const _names = {
@@ -19,4 +22,4 @@ const _dirs = {
 }
 
 
-export { scillaServerUrl, CONTRACT_CODE, _dirs, _names };
+export { scillaServerUrl, getContractCode, _dirs, _names };

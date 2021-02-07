@@ -2,14 +2,18 @@ import fetch from 'node-fetch';
 
 
 class ScillaServer {
+    host: string;
+
+    constructor(host: string) {
+        this.host = host;
+    }
     /**
-        @param ssUrlEndpoint scilla server endpoint url ex https://localhost:4000/contract/check
         @param contractCode code of the .scilla contract
     */
-    async check({ ssUrlEndpoint, contractCode }:
-        { ssUrlEndpoint: string, contractCode: string }) {
+    async check({ contractCode }:
+        { contractCode: string }) {
         try {
-            const res = await fetch(ssUrlEndpoint, {
+            const res = await fetch(`${this.host}/contract/check`, {
                 method: "POST", body: JSON.stringify(
                     {
                         "code": contractCode,
@@ -24,14 +28,13 @@ class ScillaServer {
 
     /**
      * 
-     * @param ssUrlEndpoint scilla server endpoint url ex https://localhost:4000/contract/call
      * @param testBody body of the test to send
      * @param gaslimit defaults to 100000
      */
-    async runTest({ ssUrlEndpoint, testBody, gaslimit = "100000" }:
-        { ssUrlEndpoint: string, testBody: { [key: string]: string }, gaslimit?: string }) {
+    async runTest({ testBody, gaslimit = "100000" }:
+        { testBody: { [key: string]: string }, gaslimit?: string }) {
         try {
-            const res = await fetch(ssUrlEndpoint, {
+            const res = await fetch(`${this.host}/contract/call`, {
                 method: "POST", body: JSON.stringify(
                     {
                         ...testBody,
