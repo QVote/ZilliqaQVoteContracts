@@ -1,8 +1,32 @@
-# QVoteZilliqaContract
+# QVoteZilliqaContract :fire:
 Quadratic Voting smart contracts for Zilliqa
 
+# Contracts :scroll:
+Contracts are located in: /contract
+
+There are 2 contracts:
+- DecisionQueue.scilla (a queue for storing contract addresses)
+- QVoting.scilla (quadratic voting logic)
+
+# Tests
+Contract testing logic is in: /scripts
+
+to run tests:
+- Run the scilla-server docker container on localhost:4000 (get it using: https://github.com/Zilliqa/ceres)
+
+```bash
+cd scripts && npm run test
+```
 
 
+
+
+
+
+
+
+
+# Our Research:
 # INTEGRATING TOKENS 
 
 ZRC-2 https://github.com/Zilliqa/ZRC/blob/master/zrcs/zrc-2.md
