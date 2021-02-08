@@ -75,14 +75,14 @@ transition pushToQueue(addr: ByStr20)
 	    	e = push_fail_already_in_queue_event;
 	      event e
 	  | False =>
-	     	(* check if the queue reached max size *)
+	    (* check if the queue reached max size *)
         (* if reached max size delete oldest address *)
-      	(* else reached max size delete oldest address *)
+      	(* else just return the list  *)
       	del_queue = delete_first_if_max_reached cur_queue max_queue_size;
       	new_queue = bystr20_append_back del_queue addr;
       	queue := new_queue;
       	(* push the new address to queue *)
       	e = push_success_event;
-	      event e 
+	    event e 
 	end
 end 

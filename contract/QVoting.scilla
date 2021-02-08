@@ -7,6 +7,23 @@ library QVote
 
 let zero = Uint32 0 
 
+let register_address_list: List ByStr20 -> List Int32 -> Map ByStr20 Int32 = 
+	fun(addresses: List ByStr20) => 
+	fun(balances: List Int32) =>
+		let init = Emp ByStr20 Int32 in 
+		let zip = @list_zip ByStr20 Int32 in
+    let zipped = zip addresses balances in
+    let foldleft = @list_foldl (Pair ByStr20 Int32) (Map ByStr20 Int32) in
+    let f = @fst ByStr20 Int32 in 
+    let s = @snd ByStr20 Int32 in 
+    let insert = 
+      fun(acc : Map ByStr20 Int32) => 
+      fun(address_credits_p : Pair ByStr20 Int32) => 
+        let address = f address_credits_p in 
+        let balance = s address_credits_p in 
+        builtin put acc address balance
+		in foldleft insert init zipped
+	 
 
 let vote_from_list_of_options_credits_to_map: List String -> List Int128 -> Map String Int128 -> Map String Int128 =
   fun(ls: List String) =>
@@ -231,7 +248,15 @@ contract QVote
     registration_end_time: BNum
 )
 
-(* TODO do constraint checks at contract creation *)
+(* chacking parameters *)
+with
+  let zero = Uint32 0 in
+  let correct_times = builtin blt registration_end_time expiration_block in 
+  let len_func = @list_length String in 
+  let option_len = len_func options in 
+  let valid_option = builtin lt zero option_len in 
+  andb correct_times valid_option
+=>
 
 field voter_balances : Map ByStr20 Int32 = Emp ByStr20 Int32
 (* VOTES have to be div by 100 to get the actual votes since sqrt is an integer sqrt *)
@@ -246,14 +271,15 @@ field registered_voters : List ByStr20 = Nil {ByStr20}
 this transition is only used at the moment, until we either find a decentralized oracle,
 or we can access another contract's state directly *)
 
-transition owner_register(address : ByStr20, credits : Int32)
-	is_owner = builtin eq _sender owner;
+transition owner_register(addresses : List ByStr20, credits : List Int32)
+	is_owner = builtin eq _sender owner; 
 	match is_owner with
 	| False => 
 		e = owner_register_event_failure not_owner_code; 
 		event e
 	| True => 
-		voter_balances[address] := credits; 
+		voter_balances_ = register_address_list addresses credits; 
+		voter_balances := voter_balances_; 
 		e = owner_register_event_success; 
 		event e
 	end
@@ -328,5 +354,3 @@ transition vote(options_sender: List String, credits_sender: List Int128)
   end
 end 
 	
-
-
