@@ -1,0 +1,175 @@
+{
+	"result": "success",
+	"message": {
+		"cashflow_tags": {
+			"State variables": [
+				{
+					"field": "owner",
+					"tag": "NoInfo"
+				},
+				{
+					"field": "is_decision_queue",
+					"tag": "NoInfo"
+				},
+				{
+					"field": "max_queue_size",
+					"tag": "NoInfo"
+				},
+				{
+					"field": "queue",
+					"tag": "(List NoInfo)"
+				}
+			],
+			"ADT constructors": []
+		},
+		"contract_info": {
+			"scilla_major_version": "0",
+			"vname": "DecisionQueue",
+			"params": [
+				{
+					"vname": "owner",
+					"type": "ByStr20"
+				},
+				{
+					"vname": "is_decision_queue",
+					"type": "Bool"
+				},
+				{
+					"vname": "max_queue_size",
+					"type": "Uint32"
+				}
+			],
+			"fields": [
+				{
+					"vname": "queue",
+					"type": "List (ByStr20)",
+					"depth": 0
+				}
+			],
+			"transitions": [
+				{
+					"vname": "pushToQueue",
+					"params": [
+						{
+							"vname": "addr",
+							"type": "ByStr20"
+						}
+					]
+				}
+			],
+			"procedures": [],
+			"events": [
+				{
+					"vname": "push_fail_already_in_queue",
+					"params": []
+				},
+				{
+					"vname": "push_success",
+					"params": []
+				}
+			],
+			"ADTs": [
+				{
+					"tname": "Option",
+					"tparams": [
+						"'A"
+					],
+					"tmap": [
+						{
+							"cname": "Some",
+							"argtypes": [
+								"'A"
+							]
+						},
+						{
+							"cname": "None",
+							"argtypes": []
+						}
+					]
+				},
+				{
+					"tname": "Bool",
+					"tparams": [],
+					"tmap": [
+						{
+							"cname": "True",
+							"argtypes": []
+						},
+						{
+							"cname": "False",
+							"argtypes": []
+						}
+					]
+				},
+				{
+					"tname": "Nat",
+					"tparams": [],
+					"tmap": [
+						{
+							"cname": "Zero",
+							"argtypes": []
+						},
+						{
+							"cname": "Succ",
+							"argtypes": [
+								"Nat"
+							]
+						}
+					]
+				},
+				{
+					"tname": "List",
+					"tparams": [
+						"'A"
+					],
+					"tmap": [
+						{
+							"cname": "Cons",
+							"argtypes": [
+								"'A",
+								"List ('A)"
+							]
+						},
+						{
+							"cname": "Nil",
+							"argtypes": []
+						}
+					]
+				},
+				{
+					"tname": "Pair",
+					"tparams": [
+						"'A",
+						"'B"
+					],
+					"tmap": [
+						{
+							"cname": "Pair",
+							"argtypes": [
+								"'A",
+								"'B"
+							]
+						}
+					]
+				}
+			]
+		},
+		"warnings": [
+			{
+				"warning_message": "No transition in contract DecisionQueue contains an accept statement\n",
+				"start_location": {
+					"file": "",
+					"line": 0,
+					"column": 0
+				},
+				"end_location": {
+					"file": "",
+					"line": 0,
+					"column": 0
+				},
+				"warning_id": 1
+			}
+		],
+		"gas_remaining": "78862"
+	}
+}
