@@ -31,7 +31,8 @@ export function handleResult(testName: string, result: any, testBody: any, tg: T
     tg.write(testName, { ...testBody, result: result });
     console.info(`Test: ${testName}:`)
     console.log(result.result == "error" ? RED : GREEN, `result: ${result.result}`)
-    console.log(CYAN, `event: ${result.message.events.map((e: any) => e._eventname)}`)
+    const events = result.message.events.map((e: any) => [e._eventname, e.params.map(((p: any) => p.value))]);
+    console.log(CYAN, `event: ${events}`)
     if (result.result == 'error') {
         console.log(result.message);
     }
