@@ -1,0 +1,88 @@
+scilla_version 0 
+
+import BoolUtils IntUtils ListUtils PairUtils
+
+
+library DecisionQueue 
+
+let bystr20_len: List ByStr20 -> Uint32 = 
+  fun (l : List ByStr20) => 
+    let len = @list_length ByStr20 in
+    len l
+    
+let bystr20_tail: List ByStr20 -> List ByStr20 = 
+  fun (l : List ByStr20) => 
+    let tail = @list_tail ByStr20 in
+    let list_tail = tail l in
+    match list_tail with 
+      | Some res => res
+      | None => Nil {ByStr20}
+    end
+    
+let bystr20_eq: ByStr20 -> ByStr20 -> Bool =
+  fun(e1 : ByStr20) =>
+  fun(e2 : ByStr20) => 
+    builtin eq e1 e2
+    
+let bystr20_has_elem: List ByStr20 -> ByStr20 -> Bool = 
+  fun (l : List ByStr20) => 
+  fun (e : ByStr20) =>
+    let curried = bystr20_eq e in
+    let has = @list_exists ByStr20 in
+    has curried l 
+
+let delete_first_if_max_reached: List ByStr20 -> Uint32 -> List ByStr20 =
+  fun (l : List ByStr20) => 
+  fun (max_size : Uint32) => 
+    let cur_size = bystr20_len l in
+    let is_too_big = uint32_le max_size cur_size in
+    match is_too_big with
+      | True => bystr20_tail l
+      | False => l
+    end
+    
+let bystr20_append_back: List ByStr20 -> ByStr20 -> List ByStr20 =
+  fun (l : List ByStr20) => 
+  fun (to_append : ByStr20) => 
+    let rev = @list_reverse ByStr20 in
+    let reversed_l = rev l in
+    let appended = Cons {ByStr20} to_append reversed_l in
+    rev appended
+
+let push_success_event = {_eventname: "push_success"}
+let push_fail_already_in_queue_event = {_eventname: "push_fail_already_in_queue"}
+
+contract DecisionQueue 
+(
+    owner: ByStr20,
+    is_decision_queue: Bool,
+    max_queue_size: Uint32
+)
+
+field queue : List (ByStr20) = Nil {ByStr20}
+
+(*
+  @notice: this queue accepts any address and deletes the oldest 
+  address upon reaching the max size
+  @param: addr : address of the smart contract to add to the queue
+*)
+transition pushToQueue(addr: ByStr20)
+	cur_queue <- queue;
+	(* check if addr not already in queue *)
+	has_addr = bystr20_has_elem cur_queue addr;
+	match has_addr with
+	  | True => 
+	    	e = push_fail_already_in_queue_event;
+	      event e
+	  | False =>
+	    (* check if the queue reached max size *)
+        (* if reached max size delete oldest address *)
+      	(* else just return the list  *)
+      	del_queue = delete_first_if_max_reached cur_queue max_queue_size;
+      	new_queue = bystr20_append_back del_queue addr;
+      	queue := new_queue;
+      	(* push the new address to queue *)
+      	e = push_success_event;
+	    event e 
+	end
+end 

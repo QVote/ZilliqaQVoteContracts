@@ -1,0 +1,352 @@
+{
+	"result": "success",
+	"message": {
+		"cashflow_tags": {
+			"State variables": [
+				{
+					"field": "owner",
+					"tag": "NotMoney"
+				},
+				{
+					"field": "expiration_block",
+					"tag": "NotMoney"
+				},
+				{
+					"field": "name",
+					"tag": "NoInfo"
+				},
+				{
+					"field": "description",
+					"tag": "NoInfo"
+				},
+				{
+					"field": "options",
+					"tag": "NoInfo"
+				},
+				{
+					"field": "token_to_credit_ratio",
+					"tag": "NoInfo"
+				},
+				{
+					"field": "registration_end_time",
+					"tag": "NotMoney"
+				},
+				{
+					"field": "voter_balances",
+					"tag": "(Map NoInfo)"
+				},
+				{
+					"field": "options_to_votes_map",
+					"tag": "NoInfo"
+				},
+				{
+					"field": "registered_voters",
+					"tag": "(List NoInfo)"
+				}
+			],
+			"ADT constructors": []
+		},
+		"contract_info": {
+			"scilla_major_version": "0",
+			"vname": "QVote",
+			"params": [
+				{
+					"vname": "owner",
+					"type": "ByStr20"
+				},
+				{
+					"vname": "expiration_block",
+					"type": "BNum"
+				},
+				{
+					"vname": "name",
+					"type": "String"
+				},
+				{
+					"vname": "description",
+					"type": "String"
+				},
+				{
+					"vname": "options",
+					"type": "List (String)"
+				},
+				{
+					"vname": "token_to_credit_ratio",
+					"type": "Int32"
+				},
+				{
+					"vname": "registration_end_time",
+					"type": "BNum"
+				}
+			],
+			"fields": [
+				{
+					"vname": "voter_balances",
+					"type": "Map (ByStr20) (Int32)",
+					"depth": 1
+				},
+				{
+					"vname": "options_to_votes_map",
+					"type": "Map (String) (Int128)",
+					"depth": 1
+				},
+				{
+					"vname": "registered_voters",
+					"type": "List (ByStr20)",
+					"depth": 0
+				}
+			],
+			"transitions": [
+				{
+					"vname": "owner_register",
+					"params": [
+						{
+							"vname": "addresses",
+							"type": "List (ByStr20)"
+						},
+						{
+							"vname": "credits",
+							"type": "List (Int32)"
+						}
+					]
+				},
+				{
+					"vname": "register",
+					"params": []
+				},
+				{
+					"vname": "vote",
+					"params": [
+						{
+							"vname": "options_sender",
+							"type": "List (String)"
+						},
+						{
+							"vname": "credits_sender",
+							"type": "List (Int128)"
+						}
+					]
+				}
+			],
+			"procedures": [],
+			"events": [
+				{
+					"vname": "owner_register_failure",
+					"params": [
+						{
+							"vname": "code",
+							"type": "Uint32"
+						}
+					]
+				},
+				{
+					"vname": "owner_register_success",
+					"params": [
+						{
+							"vname": "code",
+							"type": "Uint32"
+						}
+					]
+				},
+				{
+					"vname": "vote_failure",
+					"params": [
+						{
+							"vname": "code",
+							"type": "Uint32"
+						}
+					]
+				},
+				{
+					"vname": "vote_success",
+					"params": [
+						{
+							"vname": "code",
+							"type": "Uint32"
+						}
+					]
+				},
+				{
+					"vname": "register_failure",
+					"params": [
+						{
+							"vname": "code",
+							"type": "Uint32"
+						}
+					]
+				},
+				{
+					"vname": "register_success",
+					"params": [
+						{
+							"vname": "code",
+							"type": "Uint32"
+						}
+					]
+				},
+				{
+					"vname": "build_decision_failure",
+					"params": [
+						{
+							"vname": "code",
+							"type": "Uint32"
+						}
+					]
+				},
+				{
+					"vname": "build_decision_success",
+					"params": [
+						{
+							"vname": "code",
+							"type": "Uint32"
+						}
+					]
+				}
+			],
+			"ADTs": [
+				{
+					"tname": "Option",
+					"tparams": [
+						"'A"
+					],
+					"tmap": [
+						{
+							"cname": "Some",
+							"argtypes": [
+								"'A"
+							]
+						},
+						{
+							"cname": "None",
+							"argtypes": []
+						}
+					]
+				},
+				{
+					"tname": "Bool",
+					"tparams": [],
+					"tmap": [
+						{
+							"cname": "True",
+							"argtypes": []
+						},
+						{
+							"cname": "False",
+							"argtypes": []
+						}
+					]
+				},
+				{
+					"tname": "Nat",
+					"tparams": [],
+					"tmap": [
+						{
+							"cname": "Zero",
+							"argtypes": []
+						},
+						{
+							"cname": "Succ",
+							"argtypes": [
+								"Nat"
+							]
+						}
+					]
+				},
+				{
+					"tname": "List",
+					"tparams": [
+						"'A"
+					],
+					"tmap": [
+						{
+							"cname": "Cons",
+							"argtypes": [
+								"'A",
+								"List ('A)"
+							]
+						},
+						{
+							"cname": "Nil",
+							"argtypes": []
+						}
+					]
+				},
+				{
+					"tname": "Pair",
+					"tparams": [
+						"'A",
+						"'B"
+					],
+					"tmap": [
+						{
+							"cname": "Pair",
+							"argtypes": [
+								"'A",
+								"'B"
+							]
+						}
+					]
+				}
+			]
+		},
+		"warnings": [
+			{
+				"warning_message": "Consider using in-place Map access",
+				"start_location": {
+					"file": "/scilla-server/temp/7032f364-299d-4cff-8fb8-22558dfc0c6c.scilla",
+					"line": 343,
+					"column": 10
+				},
+				"end_location": {
+					"file": "",
+					"line": 0,
+					"column": 0
+				},
+				"warning_id": 1
+			},
+			{
+				"warning_message": "Consider using in-place Map access",
+				"start_location": {
+					"file": "/scilla-server/temp/7032f364-299d-4cff-8fb8-22558dfc0c6c.scilla",
+					"line": 340,
+					"column": 18
+				},
+				"end_location": {
+					"file": "",
+					"line": 0,
+					"column": 0
+				},
+				"warning_id": 1
+			},
+			{
+				"warning_message": "Consider using in-place Map access",
+				"start_location": {
+					"file": "/scilla-server/temp/7032f364-299d-4cff-8fb8-22558dfc0c6c.scilla",
+					"line": 282,
+					"column": 3
+				},
+				"end_location": {
+					"file": "",
+					"line": 0,
+					"column": 0
+				},
+				"warning_id": 1
+			},
+			{
+				"warning_message": "No transition in contract QVote contains an accept statement\n",
+				"start_location": {
+					"file": "",
+					"line": 0,
+					"column": 0
+				},
+				"end_location": {
+					"file": "",
+					"line": 0,
+					"column": 0
+				},
+				"warning_id": 1
+			}
+		],
+		"gas_remaining": "78575"
+	}
+}
