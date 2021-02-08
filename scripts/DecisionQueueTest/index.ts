@@ -1,4 +1,4 @@
-import { handleResult, testingFunction } from '../utill';
+import { runTest, testingFunction } from '../utill';
 
 
 export const testDecisionQueue: testingFunction = async (tg, code, checkerOutput, ss) => {
@@ -27,7 +27,7 @@ export const testDecisionQueue: testingFunction = async (tg, code, checkerOutput
                 tg.createValueParam("List (ByStr20)", "queue", emptyArr),
             ], "0"),
         );
-        await runTest("pushToQueueShouldPush", testBody1);
+        await runTest("pushToQueueShouldPush", testBody1, ss, tg);
 
 
         const testBody2 = tg.genTestBody(
@@ -40,7 +40,7 @@ export const testDecisionQueue: testingFunction = async (tg, code, checkerOutput
                 tg.createValueParam("List (ByStr20)", "queue", [ownerAddress]),
             ], "0"),
         );
-        await runTest("pushToQueueShouldReject", testBody2);
+        await runTest("pushToQueueShouldReject", testBody2, ss, tg);
 
 
         const testBody3 = tg.genTestBody(
@@ -55,15 +55,8 @@ export const testDecisionQueue: testingFunction = async (tg, code, checkerOutput
                 tg.createValueParam("List (ByStr20)", "queue", [ownerAddress, "0x2234567890123456789012345678901234567890", "0x3234567890123456789012345678901234567890"]),
             ], "0"),
         );
-        await runTest("pushToQueueShouldDequeueAndPush", testBody3);
+        await runTest("pushToQueueShouldDequeueAndPush", testBody3, ss, tg);
 
 
     } catch (e) { throw e; }
-
-    async function runTest(name: string, testBody: any) {
-        try {
-            const result = await ss.runTest({ testBody });
-            handleResult(name, result, testBody, tg);
-        } catch (e) { throw e; }
-    }
 }
