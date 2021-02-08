@@ -1,8 +1,9 @@
 import { getContractCode, _dirs, _names, scillaServerUrl } from './config';
 import { TestGenerator, ScillaServer } from './scillaTest';
 import { testDecisionQueue } from './DecisionQueueTest';
+import { testQVoting } from './QVotingTest';
 import { resolve } from 'path';
-import { check} from './utill';
+import { check } from './utill';
 
 
 const tg = new TestGenerator({
@@ -17,7 +18,7 @@ const ss = new ScillaServer(scillaServerUrl);
             testDecisionQueue, ss, tg);
         await check("QVoting", getContractCode(
             resolve('../contract/QVoting.scilla')),
-            testDecisionQueue, ss, tg);
+            testQVoting, ss, tg);
     } catch (e) {
         console.error(e);
     }

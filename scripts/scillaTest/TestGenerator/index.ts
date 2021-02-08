@@ -35,11 +35,7 @@ class TestGenerator {
      * Generates the initial contract immutable field values json
      * Uses the params one can get from the checker output: .contract_info.params
      * @param params 
-     * @param stringVal 
-     * @param listStringVal 
-     * @param int32Val 
-     * @param bNumVal 
-     * @param byStr20Val 
+     * @param conf
      */
     genInit(params: Params, conf: { [key: string]: ValueField }) {
         return [
@@ -59,6 +55,30 @@ class TestGenerator {
                 "value": "1"
             },
             ...setValForParams(params, conf)]
+    }
+
+    /**
+     * Generates the initial contract immutable field values json
+     * @param params 
+     */
+    genInitFromRaw(params: ValueParams) {
+        return [
+            {
+                "vname": "_scilla_version",
+                "type": "Uint32",
+                "value": "0"
+            },
+            {
+                "vname": "_this_address",
+                "type": "ByStr20",
+                "value": "0xabfeccdc9012345678901234567890f777567890"
+            },
+            {
+                "vname": "_creation_block",
+                "type": "BNum",
+                "value": "1"
+            },
+            ...params]
     }
 
     /**

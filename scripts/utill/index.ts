@@ -6,9 +6,18 @@ const FgRed = "\x1b[31m";
 const FgGreen = "\x1b[32m";
 const FgYellow = "\x1b[33m";
 const Reset = "\x1b[0m";
-export const RED = FgRed + "%s" + Reset;
-export const GREEN = FgGreen + "%s" + Reset;
-export const YELLOW = FgYellow + "%s" + Reset;
+const FgCyan = "\x1b[36m";
+const FgMagenta = "\x1b[35m";
+const InjectReset = "%s" + Reset;
+export const RED = FgRed + InjectReset;
+export const GREEN = FgGreen + InjectReset;
+export const YELLOW = FgYellow + InjectReset;
+export const CYAN = FgCyan + InjectReset;
+export const MAGENTA = FgMagenta + InjectReset;
+
+function printLine() {
+    console.log(MAGENTA, "________________________________")
+}
 
 export type testingFunction = (
     tg: TestGenerator,
@@ -22,9 +31,11 @@ export function handleResult(testName: string, result: any, testBody: any, tg: T
     tg.write(testName, { ...testBody, result: result });
     console.info(`Test: ${testName}:`)
     console.log(result.result == "error" ? RED : GREEN, `result: ${result.result}`)
+    console.log(CYAN, `event: ${result.message.events.map((e: any) => e._eventname)}`)
     if (result.result == 'error') {
         console.log(result.message);
     }
+    printLine();
 }
 
 export async function runTest(name: string, testBody: any, ss: ScillaServer, tg: TestGenerator) {
@@ -44,6 +55,7 @@ export async function check(name: string, code: string, callback: testingFunctio
         console.log(res.result == 'success' ? GREEN : RED, `result: ${res.result}`)
         writeFile('out', `${name}/out`, 'json', res);
         if (typeof res.message != 'string') {
+            printLine();
             const out = res.message!! as CheckerOutput;
             await callback(tg, code, out, ss);
         } else {
