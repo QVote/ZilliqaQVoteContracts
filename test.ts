@@ -14,10 +14,10 @@ const ss = new ScillaServer(scillaServerUrl);
 (async () => {
     try {
         await check("DecisionQueue", getContractCode(
-            resolve('../contract/DecisionQueue.scilla')),
+            resolve('./contract/DecisionQueue.scilla')),
             testDecisionQueue, ss, tg);
         await check("QVoting", getContractCode(
-            resolve('../contract/QVoting.scilla')),
+            resolve('./contract/QVoting.scilla')),
             testQVoting, ss, tg);
     } catch (e) {
         console.error(e);

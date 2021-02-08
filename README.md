@@ -8,14 +8,15 @@ There are 2 contracts:
 - DecisionQueue.scilla (a queue for storing contract addresses)
 - QVoting.scilla (quadratic voting logic)
 
-# Tests
-Contract testing logic is in: /scripts
-
-to run tests:
+# Tests :hammer:
+To run tests:
 - Run the scilla-server docker container on localhost:4000 (get it using: https://github.com/Zilliqa/ceres)
 
+
+Then run:
+
 ```bash
-cd scripts && npm run test
+npm run test
 ```
 
 
