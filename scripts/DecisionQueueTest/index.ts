@@ -1,13 +1,7 @@
-import { TestGenerator, ScillaServer } from '../scillaTest';
-import { handleResult } from '../utill';
+import { handleResult, testingFunction } from '../utill';
 
 
-export async function testDecisionQueue(
-    tg: TestGenerator,
-    code: string,
-    checkerOutput: any,
-    ss: ScillaServer,
-) {
+export const testDecisionQueue: testingFunction = async (tg, code, checkerOutput, ss) => {
     try {
         const ownerAddress = "0x1234567890123456789012345678901234567890";
         const blockchain = tg.genBlockchain("100");

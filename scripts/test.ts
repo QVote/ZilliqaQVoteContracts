@@ -4,6 +4,7 @@ import { testDecisionQueue } from './DecisionQueueTest';
 import { resolve } from 'path';
 import { CheckerOutput } from './scillaTest/types'
 import { writeFile } from './scillaTest/utill'
+import { testingFunction } from './utill';
 
 
 const tg = new TestGenerator({
@@ -16,6 +17,9 @@ const ss = new ScillaServer(scillaServerUrl);
         await check("DecisionQueue", getContractCode(
             resolve('../contract/DecisionQueue.scilla')),
             testDecisionQueue);
+        await check("QVoting", getContractCode(
+            resolve('../contract/QVoting.scilla')),
+            testDecisionQueue);
     } catch (e) {
         console.error(e);
     }
@@ -25,9 +29,7 @@ const ss = new ScillaServer(scillaServerUrl);
 
 
 
-async function check(name: string, code: string,
-    callback: (tg: TestGenerator, code: string, checkerOutput: CheckerOutput, ss: ScillaServer) => Promise<any>
-) {
+async function check(name: string, code: string, callback: testingFunction) {
     try {
         console.log(`Running ${name} tests...`)
         const res = await ss.check({

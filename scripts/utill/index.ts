@@ -1,4 +1,12 @@
-import { TestGenerator } from "../scillaTest";
+import { TestGenerator, ScillaServer } from "../scillaTest";
+
+
+export type testingFunction = (
+    tg: TestGenerator,
+    code: string,
+    checkerOutput: any,
+    ss: ScillaServer,
+) => Promise<void>
 
 export function handleResult(testName: string, result: any, testBody: any, tg: TestGenerator) {
     testBody.code = "Removed Code";
