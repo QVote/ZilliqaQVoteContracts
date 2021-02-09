@@ -1,4 +1,4 @@
-# QVoteZilliqaContract :fire:
+# ZilliqaContracts :fire:
 Quadratic Voting smart contracts for Zilliqa
 
 # Contracts :scroll:
