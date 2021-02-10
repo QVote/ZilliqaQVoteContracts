@@ -24,12 +24,16 @@
 					"tag": "NoInfo"
 				},
 				{
-					"field": "token_to_credit_ratio",
+					"field": "credit_to_token_ratio",
 					"tag": "NoInfo"
 				},
 				{
 					"field": "registration_end_time",
 					"tag": "NotMoney"
+				},
+				{
+					"field": "token_id",
+					"tag": "NoInfo"
 				},
 				{
 					"field": "voter_balances",
@@ -71,12 +75,16 @@
 					"type": "List (String)"
 				},
 				{
-					"vname": "token_to_credit_ratio",
+					"vname": "credit_to_token_ratio",
 					"type": "Int32"
 				},
 				{
 					"vname": "registration_end_time",
 					"type": "BNum"
+				},
+				{
+					"vname": "token_id",
+					"type": "String"
 				}
 			],
 			"fields": [
@@ -293,8 +301,8 @@
 			{
 				"warning_message": "Consider using in-place Map access",
 				"start_location": {
-					"file": "/scilla-server/temp/7032f364-299d-4cff-8fb8-22558dfc0c6c.scilla",
-					"line": 343,
+					"file": "/scilla-server/temp/fecb1152-84a1-4eb4-974f-90d2ff313f65.scilla",
+					"line": 344,
 					"column": 10
 				},
 				"end_location": {
@@ -307,8 +315,8 @@
 			{
 				"warning_message": "Consider using in-place Map access",
 				"start_location": {
-					"file": "/scilla-server/temp/7032f364-299d-4cff-8fb8-22558dfc0c6c.scilla",
-					"line": 340,
+					"file": "/scilla-server/temp/fecb1152-84a1-4eb4-974f-90d2ff313f65.scilla",
+					"line": 341,
 					"column": 18
 				},
 				"end_location": {
@@ -321,8 +329,8 @@
 			{
 				"warning_message": "Consider using in-place Map access",
 				"start_location": {
-					"file": "/scilla-server/temp/7032f364-299d-4cff-8fb8-22558dfc0c6c.scilla",
-					"line": 282,
+					"file": "/scilla-server/temp/fecb1152-84a1-4eb4-974f-90d2ff313f65.scilla",
+					"line": 283,
 					"column": 3
 				},
 				"end_location": {

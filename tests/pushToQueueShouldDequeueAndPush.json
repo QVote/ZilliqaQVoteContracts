@@ -9,7 +9,7 @@
 		"result": "success",
 		"message": {
 			"scilla_major_version": "0",
-			"gas_remaining": "98805",
+			"gas_remaining": "98778",
 			"_accepted": "false",
 			"messages": [],
 			"states": [
