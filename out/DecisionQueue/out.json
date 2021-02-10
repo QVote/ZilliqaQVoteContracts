@@ -5,7 +5,7 @@
 			"State variables": [
 				{
 					"field": "owner",
-					"tag": "NoInfo"
+					"tag": "NotMoney"
 				},
 				{
 					"field": "is_decision_queue",
@@ -60,8 +60,13 @@
 			"procedures": [],
 			"events": [
 				{
-					"vname": "push_fail_already_in_queue",
-					"params": []
+					"vname": "push_failured",
+					"params": [
+						{
+							"vname": "code",
+							"type": "Uint32"
+						}
+					]
 				},
 				{
 					"vname": "push_success",

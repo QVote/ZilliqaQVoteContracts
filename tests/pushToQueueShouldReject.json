@@ -9,7 +9,7 @@
 		"result": "success",
 		"message": {
 			"scilla_major_version": "0",
-			"gas_remaining": "99142",
+			"gas_remaining": "99096",
 			"_accepted": "false",
 			"messages": [],
 			"states": [
@@ -28,8 +28,14 @@
 			],
 			"events": [
 				{
-					"_eventname": "push_fail_already_in_queue",
-					"params": []
+					"_eventname": "push_failured",
+					"params": [
+						{
+							"vname": "code",
+							"type": "Uint32",
+							"value": "0"
+						}
+					]
 				}
 			]
 		}

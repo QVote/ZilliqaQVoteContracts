@@ -37,7 +37,7 @@ export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) 
             "value": optionsArr
         },
         {
-            "vname": "token_to_credit_ratio",
+            "vname": "credit_to_token_ratio",
             "type": "Int32",
             "value": "100"
         },
@@ -45,7 +45,12 @@ export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) 
             "vname": "registration_end_time",
             "type": "BNum",
             "value": registrationTime
-        }]);
+        },
+		{
+			"vname": "token_id",
+			"type": "String",
+			"value": "ZilDOGE"
+		}]);
 
         await runTest("ownerRegisterShouldRegisterWithOwnerAsSender", tg.genTestBody(
             code,
