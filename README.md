@@ -15,7 +15,7 @@ This is the real quadratic voting contract. Each contract represents one decisio
 This smart contract is simply a reference to the 'n latest' decision smart contracts. The contracts referenced here get posted on the web app (which doesn't exist right now). If you want to create an election and NOT have it be displayed on the web app, don't register it in the queue. 
 
 
-# Tests :hammer:
+# Tests :test_tube:
 To run tests:
 - Run the scilla-server docker container on localhost:4000 (get it using: https://github.com/Zilliqa/ceres)
 
