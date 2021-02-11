@@ -3,6 +3,7 @@ import { testingFunction, runTest } from '../../utill';
 
 export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) => {
     try {
+        const scope = "QVoting";
         const ownerAddress = "0x1234567890123456789012345678901234567890";
         const voterAddress1 = "0x5234567890123456789012345678901234567890";
         const blockchain = tg.genBlockchain("100");
@@ -52,7 +53,7 @@ export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) 
 			"value": "ZilDOGE"
 		}]);
 
-        await runTest("ownerRegisterShouldRegisterWithOwnerAsSender", tg.genTestBody(
+        await runTest(scope,"ownerRegisterShouldRegisterWithOwnerAsSender", tg.genTestBody(
             code,
             init,
             blockchain,
@@ -69,7 +70,7 @@ export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) 
         ),
             ss, tg);
 
-        await runTest("ownerRegisterShouldRejectWithRandomAsSender", tg.genTestBody(
+        await runTest(scope,"ownerRegisterShouldRejectWithRandomAsSender", tg.genTestBody(
             code,
             init,
             blockchain,
@@ -86,7 +87,7 @@ export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) 
         ),
             ss, tg);
 
-        await runTest("voterShouldBeAbleToVoteInTime", tg.genTestBody(
+        await runTest(scope,"voterShouldBeAbleToVoteInTime", tg.genTestBody(
             code,
             init,
             blockchain,
@@ -108,7 +109,7 @@ export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) 
         ),
             ss, tg);
 
-        await runTest("voterShouldBeRejectedAfterExpiration", tg.genTestBody(
+        await runTest(scope,"voterShouldBeRejectedAfterExpiration", tg.genTestBody(
             code,
             init,
             tg.genBlockchain("" + ((parseInt(expirationTime)) + 10)),
@@ -130,7 +131,7 @@ export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) 
         ),
             ss, tg);
 
-        await runTest("voteShouldAddSquaredVotes", tg.genTestBody(
+        await runTest(scope,"voteShouldAddSquaredVotes", tg.genTestBody(
             code,
             init,
             blockchain,

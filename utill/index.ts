@@ -27,9 +27,9 @@ export type testingFunction = (
     ss: ScillaServer,
 ) => Promise<void>
 
-export function handleResult(testName: string, result: any, testBody: any, tg: TestGenerator) {
+export function handleResult(scope: string, testName: string, result: any, testBody: any, tg: TestGenerator) {
     testBody.code = "Removed Code";
-    tg.write(testName, { ...testBody, result: result });
+    tg.write(`${scope}/` + testName, { ...testBody, result: result });
     console.info(`Test: ${testName}:`)
     console.log(result.result == "error" ? RED : GREEN, `result: ${result.result}`)
     const events = result.message.events.map((e: any) => [e._eventname, e.params.map(((p: any) => p.value))]);
@@ -40,10 +40,10 @@ export function handleResult(testName: string, result: any, testBody: any, tg: T
     printLine();
 }
 
-export async function runTest(name: string, testBody: any, ss: ScillaServer, tg: TestGenerator) {
+export async function runTest(scope: string, name: string, testBody: any, ss: ScillaServer, tg: TestGenerator) {
     try {
         const result = await ss.runTest({ testBody });
-        handleResult(name, result, testBody, tg);
+        handleResult(scope, name, result, testBody, tg);
     } catch (e) { throw e; }
 }
 
