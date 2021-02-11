@@ -1,6 +1,7 @@
 import { TestGenerator, ScillaServer } from "../scillaTest";
 import { CheckerOutput } from '../scillaTest/types'
 import { writeFile } from '../scillaTest/utill'
+import { _dirs } from '../config';
 
 const FgRed = "\x1b[31m";
 const FgGreen = "\x1b[32m";
@@ -54,7 +55,7 @@ export async function check(name: string, code: string, callback: testingFunctio
         });
         console.log("Check:");
         console.log(res.result == 'success' ? GREEN : RED, `result: ${res.result}`)
-        writeFile('out', `${name}/out`, 'json', res);
+        writeFile(_dirs.checkerOutput, `${name}/out`, 'json', res);
         if (typeof res.message != 'string') {
             printLine();
             const out = res.message!! as CheckerOutput;

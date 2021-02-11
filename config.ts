@@ -17,8 +17,8 @@ const _names = {
 }
 
 const _dirs = {
-    checkerOutput: resolve(`./out`),
-    testDir: resolve("./tests")
+    checkerOutput: resolve(`./scillaCheckerOutput`),
+    testDir: resolve("./testResults")
 }
 
 

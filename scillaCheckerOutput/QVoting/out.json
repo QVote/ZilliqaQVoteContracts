@@ -301,7 +301,7 @@
 			{
 				"warning_message": "Consider using in-place Map access",
 				"start_location": {
-					"file": "/scilla-server/temp/fecb1152-84a1-4eb4-974f-90d2ff313f65.scilla",
+					"file": "/scilla-server/temp/3e8e6e7d-9c8a-4a86-940e-68abf21b4abe.scilla",
 					"line": 344,
 					"column": 10
 				},
@@ -315,7 +315,7 @@
 			{
 				"warning_message": "Consider using in-place Map access",
 				"start_location": {
-					"file": "/scilla-server/temp/fecb1152-84a1-4eb4-974f-90d2ff313f65.scilla",
+					"file": "/scilla-server/temp/3e8e6e7d-9c8a-4a86-940e-68abf21b4abe.scilla",
 					"line": 341,
 					"column": 18
 				},
@@ -329,7 +329,7 @@
 			{
 				"warning_message": "Consider using in-place Map access",
 				"start_location": {
-					"file": "/scilla-server/temp/fecb1152-84a1-4eb4-974f-90d2ff313f65.scilla",
+					"file": "/scilla-server/temp/3e8e6e7d-9c8a-4a86-940e-68abf21b4abe.scilla",
 					"line": 283,
 					"column": 3
 				},

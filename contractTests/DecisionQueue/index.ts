@@ -1,4 +1,4 @@
-import { runTest, testingFunction } from '../utill';
+import { runTest, testingFunction } from '../../utill';
 
 
 export const testDecisionQueue: testingFunction = async (tg, code, checkerOutput, ss) => {
