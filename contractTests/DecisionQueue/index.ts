@@ -1,8 +1,9 @@
-import { runTest, testingFunction } from '../utill';
+import { runTest, testingFunction } from '../../utill';
 
 
 export const testDecisionQueue: testingFunction = async (tg, code, checkerOutput, ss) => {
     try {
+        const scope = "DecisionQueue";
         const ownerAddress = "0x1234567890123456789012345678901234567890";
         const blockchain = tg.genBlockchain("100");
         const output = tg.genOutput();
@@ -27,7 +28,7 @@ export const testDecisionQueue: testingFunction = async (tg, code, checkerOutput
                 tg.createValueParam("List (ByStr20)", "queue", emptyArr),
             ], "0"),
         );
-        await runTest("pushToQueueShouldPush", testBody1, ss, tg);
+        await runTest(scope,"pushToQueueShouldPush", testBody1, ss, tg);
 
 
         const testBody2 = tg.genTestBody(
@@ -40,7 +41,7 @@ export const testDecisionQueue: testingFunction = async (tg, code, checkerOutput
                 tg.createValueParam("List (ByStr20)", "queue", [ownerAddress]),
             ], "0"),
         );
-        await runTest("pushToQueueShouldReject", testBody2, ss, tg);
+        await runTest(scope,"pushToQueueShouldReject", testBody2, ss, tg);
 
 
         const testBody3 = tg.genTestBody(
@@ -55,7 +56,7 @@ export const testDecisionQueue: testingFunction = async (tg, code, checkerOutput
                 tg.createValueParam("List (ByStr20)", "queue", [ownerAddress, "0x2234567890123456789012345678901234567890", "0x3234567890123456789012345678901234567890"]),
             ], "0"),
         );
-        await runTest("pushToQueueShouldDequeueAndPush", testBody3, ss, tg);
+        await runTest(scope,"pushToQueueShouldDequeueAndPush", testBody3, ss, tg);
 
 
     } catch (e) { throw e; }

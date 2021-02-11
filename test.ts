@@ -1,7 +1,7 @@
 import { getContractCode, _dirs, _names, scillaServerUrl } from './config';
 import { TestGenerator, ScillaServer } from './scillaTest';
-import { testDecisionQueue } from './DecisionQueueTest';
-import { testQVoting } from './QVotingTest';
+import { testDecisionQueue } from './contractTests/DecisionQueue';
+import { testQVoting } from './contractTests/QVoting';
 import { resolve } from 'path';
 import { check } from './utill';
 

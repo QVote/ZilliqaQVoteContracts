@@ -1,6 +1,7 @@
 import { TestGenerator, ScillaServer } from "../scillaTest";
 import { CheckerOutput } from '../scillaTest/types'
 import { writeFile } from '../scillaTest/utill'
+import { _dirs } from '../config';
 
 const FgRed = "\x1b[31m";
 const FgGreen = "\x1b[32m";
@@ -26,9 +27,9 @@ export type testingFunction = (
     ss: ScillaServer,
 ) => Promise<void>
 
-export function handleResult(testName: string, result: any, testBody: any, tg: TestGenerator) {
+export function handleResult(scope: string, testName: string, result: any, testBody: any, tg: TestGenerator) {
     testBody.code = "Removed Code";
-    tg.write(testName, { ...testBody, result: result });
+    tg.write(`${scope}/` + testName, { ...testBody, result: result });
     console.info(`Test: ${testName}:`)
     console.log(result.result == "error" ? RED : GREEN, `result: ${result.result}`)
     const events = result.message.events.map((e: any) => [e._eventname, e.params.map(((p: any) => p.value))]);
@@ -39,10 +40,10 @@ export function handleResult(testName: string, result: any, testBody: any, tg: T
     printLine();
 }
 
-export async function runTest(name: string, testBody: any, ss: ScillaServer, tg: TestGenerator) {
+export async function runTest(scope: string, name: string, testBody: any, ss: ScillaServer, tg: TestGenerator) {
     try {
         const result = await ss.runTest({ testBody });
-        handleResult(name, result, testBody, tg);
+        handleResult(scope, name, result, testBody, tg);
     } catch (e) { throw e; }
 }
 
@@ -54,7 +55,7 @@ export async function check(name: string, code: string, callback: testingFunctio
         });
         console.log("Check:");
         console.log(res.result == 'success' ? GREEN : RED, `result: ${res.result}`)
-        writeFile('out', `${name}/out`, 'json', res);
+        writeFile(_dirs.checkerOutput, `${name}/out`, 'json', res);
         if (typeof res.message != 'string') {
             printLine();
             const out = res.message!! as CheckerOutput;
