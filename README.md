@@ -28,3 +28,8 @@ npm run test
 ## NOTE 
 Currently the credit distribution is not decetralized. The contracts rely on the owner calling the `owner_register` transition. To do this in a decentralized manner we would need to access the token's contract balance from scilla, which currently isn't, but soon will, be supported. 
 This means the `register` transition right now is simply for users to 'sign up' for the election. They will receive their credit balance as soon as the registration period is over and the election starts. 
+
+## Possible extensions:
+- [ ] Extend scillaTest into a standalone testing suite for scilla
+- [ ] Add quadratic funding on top of QVoting contract
+- [ ] Build new systems on top of QVoting once we can do contract calls in scilla (Waiting on @Zilliqa :heart:)
