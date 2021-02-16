@@ -126,10 +126,6 @@
 					"vname": "vote",
 					"params": [
 						{
-							"vname": "options_sender",
-							"type": "List (String)"
-						},
-						{
 							"vname": "credits_sender",
 							"type": "List (Int128)"
 						}
@@ -301,8 +297,8 @@
 			{
 				"warning_message": "Consider using in-place Map access",
 				"start_location": {
-					"file": "/scilla-server/temp/5ea26dd8-e703-414d-9fdb-32672a7468fd.scilla",
-					"line": 344,
+					"file": "/scilla-server/temp/f24b53c2-faae-49c4-b2bc-cc95fd0d531f.scilla",
+					"line": 341,
 					"column": 10
 				},
 				"end_location": {
@@ -315,8 +311,8 @@
 			{
 				"warning_message": "Consider using in-place Map access",
 				"start_location": {
-					"file": "/scilla-server/temp/5ea26dd8-e703-414d-9fdb-32672a7468fd.scilla",
-					"line": 341,
+					"file": "/scilla-server/temp/f24b53c2-faae-49c4-b2bc-cc95fd0d531f.scilla",
+					"line": 338,
 					"column": 18
 				},
 				"end_location": {
@@ -329,7 +325,7 @@
 			{
 				"warning_message": "Consider using in-place Map access",
 				"start_location": {
-					"file": "/scilla-server/temp/5ea26dd8-e703-414d-9fdb-32672a7468fd.scilla",
+					"file": "/scilla-server/temp/f24b53c2-faae-49c4-b2bc-cc95fd0d531f.scilla",
 					"line": 283,
 					"column": 3
 				},

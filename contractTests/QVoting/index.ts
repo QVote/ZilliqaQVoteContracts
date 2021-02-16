@@ -108,7 +108,6 @@ export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) 
             blockchain,
             output,
             tg.genMessage("vote", [
-                tg.createValueParam("List (String)", "options_sender", optionsArr),
                 tg.createValueParam("List (Int128)", "credits_sender", ["700", "300"]),
             ], voterAddress1, "0"),
             tg.genState([
@@ -130,7 +129,6 @@ export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) 
             tg.genBlockchain("" + ((parseInt(expirationTime)) + 10)),
             output,
             tg.genMessage("vote", [
-                tg.createValueParam("List (String)", "options_sender", optionsArr),
                 tg.createValueParam("List (Int128)", "credits_sender", ["700", "300"]),
             ], voterAddress1, "0"),
             tg.genState([
@@ -152,7 +150,6 @@ export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) 
             tg.genBlockchain("" + (1)),
             output,
             tg.genMessage("vote", [
-                tg.createValueParam("List (String)", "options_sender", optionsArr),
                 tg.createValueParam("List (Int128)", "credits_sender", ["700", "300"]),
             ], voterAddress1, "0"),
             tg.genState([
@@ -192,34 +189,19 @@ export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) 
             blockchain,
             output,
             tg.genMessage("vote", [
-                tg.createValueParam("List (String)", "options_sender", optionsArr),
                 tg.createValueParam("List (Int128)", "credits_sender", ["50", "50"]),
             ], voterAddress1, "0"),
             preVoteMutableState,
         ),
             ss, tg);
 
-        await runTest(scope, "voteRejectIfOptionsAreDifferent", tg.genTestBody(
+        await runTest(scope, "voteRejectIfCreditsLengthIsDifferent", tg.genTestBody(
             code,
             init,
             blockchain,
             output,
             tg.genMessage("vote", [
-                tg.createValueParam("List (String)", "options_sender", [...optionsArr, "something else"]),
                 tg.createValueParam("List (Int128)", "credits_sender", ["50", "50", "50"]),
-            ], voterAddress1, "0"),
-            preVoteMutableState,
-        ),
-            ss, tg);
-
-        await runTest(scope, "voteRejectIfOptionsLengthIsNotCreditLength", tg.genTestBody(
-            code,
-            init,
-            blockchain,
-            output,
-            tg.genMessage("vote", [
-                tg.createValueParam("List (String)", "options_sender", [...optionsArr, "something else"]),
-                tg.createValueParam("List (Int128)", "credits_sender", ["50", "50"]),
             ], voterAddress1, "0"),
             preVoteMutableState,
         ),
@@ -231,7 +213,6 @@ export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) 
             blockchain,
             output,
             tg.genMessage("vote", [
-                tg.createValueParam("List (String)", "options_sender", optionsArr),
                 tg.createValueParam("List (Int128)", "credits_sender", ["5000", "50"]),
             ], voterAddress1, "0"),
             preVoteMutableState,
@@ -244,10 +225,21 @@ export const testQVoting: testingFunction = async (tg, code, checkerOutput, ss) 
             blockchain,
             output,
             tg.genMessage("vote", [
-                tg.createValueParam("List (String)", "options_sender", optionsArr),
                 tg.createValueParam("List (Int128)", "credits_sender", ["-900", "100"]),
             ], voterAddress1, "0"),
             preVoteMutableState,
+        ),
+            ss, tg);
+
+        await runTest(scope, "voteRejectIfNotRegistered", tg.genTestBody(
+            code,
+            init,
+            blockchain,
+            output,
+            tg.genMessage("vote", [
+                tg.createValueParam("List (Int128)", "credits_sender", ["-900", "100"]),
+            ], voterAddress1, "0"),
+            emptyState,
         ),
             ss, tg);
 
