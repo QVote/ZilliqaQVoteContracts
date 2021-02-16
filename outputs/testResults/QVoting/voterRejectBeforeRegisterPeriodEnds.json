@@ -1,0 +1,56 @@
+{
+	"code": "Removed Code",
+	"init": "[{\"vname\":\"_scilla_version\",\"type\":\"Uint32\",\"value\":\"0\"},{\"vname\":\"_this_address\",\"type\":\"ByStr20\",\"value\":\"0xabfeccdc9012345678901234567890f777567890\"},{\"vname\":\"_creation_block\",\"type\":\"BNum\",\"value\":\"1\"},{\"vname\":\"owner\",\"type\":\"ByStr20\",\"value\":\"0x1234567890123456789012345678901234567890\"},{\"vname\":\"expiration_block\",\"type\":\"BNum\",\"value\":\"100000000\"},{\"vname\":\"name\",\"type\":\"String\",\"value\":\"test\"},{\"vname\":\"description\",\"type\":\"String\",\"value\":\"test\"},{\"vname\":\"options\",\"type\":\"List (String)\",\"value\":[\"opt1\",\"opt2\"]},{\"vname\":\"credit_to_token_ratio\",\"type\":\"Int32\",\"value\":\"100\"},{\"vname\":\"registration_end_time\",\"type\":\"BNum\",\"value\":\"10\"},{\"vname\":\"token_id\",\"type\":\"String\",\"value\":\"ZilDOGE\"}]",
+	"blockchain": "[{\"vname\":\"BLOCKNUMBER\",\"type\":\"BNum\",\"value\":\"1\"}]",
+	"output": "[]",
+	"message": "{\"_tag\":\"vote\",\"_amount\":\"0\",\"_sender\":\"0x5234567890123456789012345678901234567890\",\"params\":[{\"type\":\"List (String)\",\"vname\":\"options_sender\",\"value\":[\"opt1\",\"opt2\"]},{\"type\":\"List (Int128)\",\"vname\":\"credits_sender\",\"value\":[\"700\",\"300\"]}],\"_origin\":\"0x5234567890123456789012345678901234567890\"}",
+	"state": "[{\"type\":\"Map (ByStr20) (Int32)\",\"vname\":\"voter_balances\",\"value\":[{\"key\":\"0x5234567890123456789012345678901234567890\",\"val\":\"1000\"}]},{\"type\":\"Map (String) (Int128)\",\"vname\":\"options_to_votes_map\",\"value\":[]},{\"type\":\"List (ByStr20)\",\"vname\":\"registered_voters\",\"value\":[]},{\"vname\":\"_balance\",\"type\":\"Uint128\",\"value\":\"0\"}]",
+	"result": {
+		"result": "success",
+		"message": {
+			"scilla_major_version": "0",
+			"gas_remaining": "98884",
+			"_accepted": "false",
+			"messages": [],
+			"states": [
+				{
+					"vname": "_balance",
+					"type": "Uint128",
+					"value": "0"
+				},
+				{
+					"vname": "voter_balances",
+					"type": "Map (ByStr20) (Int32)",
+					"value": [
+						{
+							"key": "0x5234567890123456789012345678901234567890",
+							"val": "1000"
+						}
+					]
+				},
+				{
+					"vname": "options_to_votes_map",
+					"type": "Map (String) (Int128)",
+					"value": []
+				},
+				{
+					"vname": "registered_voters",
+					"type": "List (ByStr20)",
+					"value": []
+				}
+			],
+			"events": [
+				{
+					"_eventname": "vote_failure",
+					"params": [
+						{
+							"vname": "code",
+							"type": "Uint32",
+							"value": "13"
+						}
+					]
+				}
+			]
+		}
+	}
+}
