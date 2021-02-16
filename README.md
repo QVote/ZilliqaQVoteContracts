@@ -19,11 +19,15 @@ This smart contract is simply a reference to the 'n latest' decision smart contr
 To run tests:
 - Run the scilla-server docker container on localhost:4000 (get it using: https://github.com/Zilliqa/ceres)
 
-Then run:
+Then run
 
-```bash
+```
 npm run test
 ```
+
+Generated outputs are in outputs/
+- scillaCheckerOutput/ : The results from runnning the checker on the contracts
+- testResults/ : The results of the tests on the contracts
 
 ## NOTE 
 Currently the credit distribution is not decetralized. The contracts rely on the owner calling the `owner_register` transition. To do this in a decentralized manner we would need to access the token's contract balance from scilla, which currently isn't, but soon will, be supported. 
