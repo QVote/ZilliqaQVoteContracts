@@ -1,6 +1,10 @@
 # ZilliqaContracts :fire:
 Quadratic Voting smart contracts for Zilliqa
 
+Part of the [Zillacracy grant initiative](https://medium.com/zillacracy/2021-here-we-come-january-2021-zillacracy-blog-55552a4bd556).
+
+![Zillacracy x QVote](static/zil_qvote.gif)
+
 # Contracts :scroll:
 Contracts are located in: /contract
 
