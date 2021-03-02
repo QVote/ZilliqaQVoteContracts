@@ -41,3 +41,4 @@ This means the `register` transition right now is simply for users to 'sign up' 
 - [ ] Extend scillaTest into a standalone testing suite for scilla
 - [ ] Add quadratic funding on top of QVoting contract
 - [ ] Build new systems on top of QVoting once we can do contract calls in scilla (Waiting on @Zilliqa :heart:)
+- [ ] QVote with NFTs. This would actually make credit checking and double voting prevention much easier. Idea is "if you have this NFT you have this amount of credits available to you" 
