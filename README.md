@@ -1,4 +1,5 @@
 # ZilliqaContracts :fire:
+### [Join our discord!](https://discord.gg/AWt6k9XhpT)
 Quadratic Voting smart contracts for Zilliqa
 
 Part of the [Zillacracy grant initiative](https://medium.com/zillacracy/2021-here-we-come-january-2021-zillacracy-blog-55552a4bd556).
